@@ -1,0 +1,8 @@
+{% extends 'ml_examples/base.html' %}
+{% block content %}
+<div class="list-group">
+    <a href="{% url 'supervised' %}" class="list-group-item list-group-item-action">Supervised Learning (Churn Prediction)</a>
+    <a href="{% url 'unsupervised' %}" class="list-group-item list-group-item-action">Unsupervised Learning (Customer Segmentation)</a>
+    <a href="{% url 'reinforcement' %}" class="list-group-item list-group-item-action">Reinforcement Learning (Bandwidth Allocation)</a>
+</div>
+{% endblock %}

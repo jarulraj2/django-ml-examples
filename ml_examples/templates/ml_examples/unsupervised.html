@@ -1,0 +1,41 @@
+{% extends 'ml_examples/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-3">Unsupervised Learning: Customer Segments</h3>
+
+    <!-- Concept Explanation -->
+    <div class="alert alert-primary">
+        <strong>What is Unsupervised Learning?</strong><br>
+        Unsupervised learning is a type of machine learning where the model is not given any labels. 
+        It tries to find patterns or groupings in the data on its own. A common technique is <strong>clustering</strong>,
+        where similar data points are grouped together.
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Use Case:</strong> We've grouped customers into segments based on usage patterns, complaints, tenure, etc. 
+        These clusters help us understand different types of customers — like high-usage, low-complaint vs. low-usage, high-complaint ones.
+    </div>
+
+    <!-- Segment Results as Table -->
+    <h5 class="mt-4">Customer Segment Results</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Segment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.id }}</td>
+                <td>Segment {{ customer.segment }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back button -->
+    <a class="btn btn-secondary mt-3" href="{% url 'home' %}">Back</a>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'ml_examples/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-3">Reinforcement Learning: Bandwidth Allocation</h3>
+
+    <!-- Concept Explanation -->
+    <div class="alert alert-primary">
+        <strong>What is Reinforcement Learning?</strong><br>
+        Reinforcement learning is a type of machine learning where an agent learns by interacting with the environment and receiving rewards.
+        Over time, it learns the best actions to take in different situations to maximize the reward.
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Use Case:</strong> We're simulating bandwidth allocation where the agent learns the best way to allocate bandwidth to maximize efficiency or user satisfaction.
+    </div>
+
+    <!-- Q-Table -->
+    <h5 class="mt-4">Learned Q-Table</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>State \ Action</th>
+                <th>0</th>
+                <th>1</th>
+                <th>2</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in q_table %}
+            <tr>
+                <td>{{ forloop.counter0 }}</td>
+                {% for value in row %}
+                <td>{{ value|floatformat:2 }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back button -->
+    <a class="btn btn-secondary mt-3" href="{% url 'home' %}">Back</a>
+</div>
+{% endblock %}

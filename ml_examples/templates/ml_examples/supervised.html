@@ -1,0 +1,51 @@
+{% extends 'ml_examples/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-3">Supervised Learning: Churn Prediction</h3>
+
+    <!-- Explanation section (keep if you want) -->
+    <div class="alert alert-primary">
+        <strong>What is Supervised Learning?</strong><br>
+        Supervised learning uses labeled data to train models for prediction.
+    </div>
+<a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
+    <!-- Input form -->
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="monthly_usage_gb" class="form-label">Monthly Usage (GB)</label>
+            <input type="number" step="any" min="0" class="form-control" id="monthly_usage_gb" name="monthly_usage_gb" value="{{ default_input.monthly_usage_gb }}">
+        </div>
+        <div class="mb-3">
+            <label for="num_complaints" class="form-label">Number of Complaints</label>
+            <input type="number" min="0" class="form-control" id="num_complaints" name="num_complaints" value="{{ default_input.num_complaints }}">
+        </div>
+        <div class="mb-3">
+            <label for="late_payments" class="form-label">Late Payments</label>
+            <input type="number" min="0" class="form-control" id="late_payments" name="late_payments" value="{{ default_input.late_payments }}">
+        </div>
+        <div class="mb-3">
+            <label for="tenure_months" class="form-label">Tenure (Months)</label>
+            <input type="number" min="0" class="form-control" id="tenure_months" name="tenure_months" value="{{ default_input.tenure_months }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Predict Churn</button>
+    </form>
+
+    <!-- Show prediction result if available -->
+    {% if prediction %}
+    <div class="alert alert-info">
+        <strong>Prediction Result:</strong> {{ prediction }}<br>
+        <strong>Probability of Churn:</strong> {{ probability }}%
+    </div>
+    {% endif %}
+
+    
+<h4 class="mt-5">Training Data Used for Model</h4>
+<div class="table-responsive">
+    {{ training_data_table|safe }}
+</div>
+
+    
+</div>
+{% endblock %}
