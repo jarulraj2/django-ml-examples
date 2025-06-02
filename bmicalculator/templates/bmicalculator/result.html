@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BMI Result</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
+    <h2 class="text-3xl font-semibold text-green-700 mb-4">✅ Result</h2>
+
+    <p class="text-xl font-medium">Your Predicted BMI: <span class="text-blue-600 font-bold">{{ bmi }}</span></p>
+
+    <p class="mt-3 text-lg text-gray-700">{{ message }}</p>
+
+    <a href="/bmi" class="inline-block mt-6 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">
+      🔁 Try Again
+    </a>
+  </div>
+
+</body>
+</html>

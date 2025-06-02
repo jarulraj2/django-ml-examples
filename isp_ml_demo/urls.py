@@ -4,4 +4,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ml_examples.urls')),
+    path('bmi/', include('bmicalculator.urls')),    
 ]

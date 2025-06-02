@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BMI Calculator - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-blue-50 min-h-screen flex flex-col items-center justify-start py-10 px-4">
+
+  <!-- Header -->
+  <header class="mb-10 text-center max-w-4xl w-full">
+    <h1 class="text-4xl font-extrabold text-blue-800 mb-4">Welcome to the BMI Calculator</h1>
+    <p class="text-lg text-gray-700">
+      Body Mass Index (BMI) is a simple calculation using your weight and height to assess if you are underweight, normal, overweight, or obese. 
+      It helps you understand your health risks and manage your wellness better.
+    </p>
+  </header>
+
+  <!-- Two-column layout -->
+  <main class="flex flex-col md:flex-row md:space-x-10 max-w-4xl w-full">
+
+    <!-- Left side: Form and Result -->
+    <section class="bg-white shadow-md rounded-2xl p-8 w-full md:w-1/2 mb-10 md:mb-0">
+      <h2 class="text-2xl font-bold mb-4 text-blue-700">Calculate Your BMI</h2>
+      
+      <form method="post" class="space-y-4" autocomplete="off">
+        {% csrf_token %}
+        <div>
+          <label class="block text-gray-700 text-left">Weight (kg):</label>
+          <input type="number" name="weight" step="0.1" min="1" max="500" required
+            class="w-full mt-1 p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value="{{ request.POST.weight }}">
+        </div>
+
+        <div>
+          <label class="block text-gray-700 text-left">Height (cm):</label>
+          <input type="number" name="height" step="0.1" min="30" max="300" required
+            class="w-full mt-1 p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value="{{ request.POST.height }}">
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition">
+          Calculate BMI
+        </button>
+      </form>
+
+      {% if bmi %}
+        <div class="mt-6 p-4 bg-green-100 rounded-xl text-green-800 font-semibold">
+          <p>Your Predicted BMI: <span class="text-blue-700">{{ bmi }}</span></p>
+          <p>{{ message }}</p>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Right side: BMI Categories Table -->
+    <section class="bg-white shadow-md rounded-2xl p-6 w-full md:w-1/2">
+      <h3 class="text-xl font-bold mb-4 text-gray-800">BMI Categories &amp; Health Risks</h3>
+      <table class="w-full border-collapse border border-gray-300 text-left">
+        <thead>
+          <tr class="bg-blue-100">
+            <th class="border border-gray-300 px-4 py-2">Category</th>
+            <th class="border border-gray-300 px-4 py-2">BMI Range (kg/m²)</th>
+            <th class="border border-gray-300 px-4 py-2">Health Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2">Underweight</td>
+            <td class="border border-gray-300 px-4 py-2">Less than 18.5</td>
+            <td class="border border-gray-300 px-4 py-2">Malnutrition risk</td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="border border-gray-300 px-4 py-2">Normal weight</td>
+            <td class="border border-gray-300 px-4 py-2">18.5 – 24.9</td>
+            <td class="border border-gray-300 px-4 py-2">Low risk</td>
+          </tr>
+          <tr>
+            <td class="border border-gray-300 px-4 py-2">Overweight</td>
+            <td class="border border-gray-300 px-4 py-2">25 – 29.9</td>
+            <td class="border border-gray-300 px-4 py-2">Enhanced risk</td>
+          </tr>
+          <tr class="bg-gray-50">
+            <td class="border border-gray-300 px-4 py-2">Obese</td>
+            <td class="border border-gray-300 px-4 py-2">30 or greater</td>
+            <td class="border border-gray-300 px-4 py-2">High risk</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-gray-500 text-sm mt-16 mb-6 text-center w-full max-w-4xl">
+    &copy; 2025 BMI Calculator. All rights reserved.
+  </footer>
+
+</body>
+</html>
