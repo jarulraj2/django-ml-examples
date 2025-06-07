@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Match 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+        #target-color {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        #buttons {
+            margin-top: 20px;
+        }
+        button.color-btn {
+            width: 110px;
+            height: 50px;
+            margin: 10px;
+            font-size: 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+        #score {
+            margin-top: 25px;
+            font-size: 24px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Color Match 2</h1>
+
+<div id="target-color">Loading...</div>
+<div id="buttons"></div>
+<div id="score">Score: 0</div>
+<div id="result"></div>
+
+<script>
+    const COLORS = ['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'];
+    let score = 0;
+    let targetColor = '';
+
+    function nextRound() {
+        targetColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+        document.getElementById('target-color').innerText = 'Find: ' + targetColor;
+        document.getElementById('result').innerText = '';
+
+        const buttonsDiv = document.getElementById('buttons');
+        buttonsDiv.innerHTML = '';
+
+        // Shuffle colors for buttons
+        const shuffledColors = COLORS.slice().sort(() => 0.5 - Math.random());
+        shuffledColors.forEach(color => {
+            const btn = document.createElement('button');
+            btn.className = 'color-btn';
+            btn.style.backgroundColor = color.toLowerCase();
+            btn.innerText = color;
+            btn.onclick = () => {
+                if(color === targetColor){
+                    score++;
+                    document.getElementById('score').innerText = 'Score: ' + score;
+                    nextRound();
+                } else {
+                    document.getElementById('result').innerText = 'Wrong! Try again.';
+                }
+            };
+            buttonsDiv.appendChild(btn);
+        });
+    }
+
+    nextRound();
+</script>
+
+</body>
+</html>

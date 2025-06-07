@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Mind Refresh{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    {% block extra_css %}
+    <!-- Child templates can inject CSS here -->
+    {% endblock %}
+   
+</head>
+
+<body>
+    <header>
+        <h1>🎮 Mind Refresh</h1>
+        <p>Select a game to refresh your mind:</p>
+        <nav>
+            <a href="/game/color-match/" class="game-link">1. Quick Color Match</a>
+            <a href="/game/click-speed/" class="game-link">2. Click Speed Test</a>
+            <a href="/game/reaction-timer/" class="game-link">3. Reaction Timer</a>
+            <a href="/game/memory/" class="game-link">4. Memory Flip Game</a>
+            <a href="/game/math-race/" class="game-link">5. Math Race</a>
+            <a href="/game/typing/" class="game-link">6. Typing Speed</a>
+            <a href="/game/emoji-match/" class="game-link">7. Emoji Match</a>
+            <a href="/game/shape-tap/" class="game-link">8. Shape Tap</a>
+            <a href="/game/word-scramble/" class="game-link">9. Word Scramble</a>
+            <a href="/game/breathe/" class="game-link">10. Breathe & Relax</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- page-specific content will go here -->
+        {% endblock %}
+    </main>
+
+    <aside class="right-sidebar">
+        <h2>Game Tips & Info</h2>
+        <p>Welcome to Mind Refresh! Here are some tips to get the most out of your games:</p>
+        <ul>
+            <li><strong>Quick Color Match:</strong> Focus on matching the color, not the text.</li>
+            <li><strong>Click Speed Test:</strong> Try to beat your own record!</li>
+            <li><strong>Reaction Timer:</strong> Stay calm and react quickly.</li>
+            <li><strong>Memory Flip Game:</strong> Use mnemonic devices to remember cards.</li>
+            <li><strong>Math Race:</strong> Speed and accuracy both matter.</li>
+        </ul>
+        <p>Enjoy and refresh your mind daily! 🧠✨</p>
+    </aside>
+
+    <!-- AI Behavior Control Panel -->
+   <div id="ai-control-panel" style="
+    position: fixed; bottom: 20px; right: 20px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white; padding: 15px 20px; border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    max-width: 320px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 2px solid white;
+">
+    <h3 style="margin-top: 0; font-weight: 600;">⏳ Play Time Left</h3>
+    
+    <div id="time-left" style="
+        font-size: 2.6rem; font-weight: bold;
+        text-align: center; margin: 10px 0;
+        background: white; color: #0077b6;
+        border-radius: 10px; padding: 5px;
+    ">05:00</div>
+    
+    <button id="stop-game-btn" style="
+        margin-top: 12px; width: 100%; padding: 12px;
+        border: none; background: #ff6b6b;
+        color: white; font-weight: bold;
+        font-size: 1rem; border-radius: 10px;
+        cursor: pointer; transition: 0.3s ease;
+    " onmouseover="this.style.background='#ff4d4d';" onmouseout="this.style.background='#ff6b6b';">
+        🚫 Stop Game Now
+    </button>
+    
+    <div id="ai-message" style="
+        margin-top: 10px; font-size: 0.95rem;
+        background-color: rgba(255,255,255,0.15);
+        padding: 8px; border-radius: 8px;
+        color: #fff9c4;
+    ">
+        <!-- AI messages will show here -->
+    </div>
+</div>
+
+
+    {% block extra_js %}
+    <!-- Child templates can inject JS here -->
+    {% endblock %}
+    
+     <script src="{% static 'js/common.js' %}"></script>
+</body>
+</html>

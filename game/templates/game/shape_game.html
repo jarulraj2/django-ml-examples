@@ -1,0 +1,142 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Shape Tap Game{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background-color: #e0f7fa;
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    #shape-display {
+        font-size: 120px;
+        margin: 30px 0;
+    }
+    button.shape-btn {
+        font-size: 24px;
+        padding: 15px 30px;
+        margin: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 12px;
+        background-color: #00796b;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    button.shape-btn:hover {
+        background-color: #004d40;
+    }
+    #score, #timer {
+        font-size: 22px;
+        margin: 10px;
+    }
+    #result {
+        font-size: 20px;
+        color: red;
+        min-height: 24px;
+        margin-top: 20px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<h1>Shape Tap Game</h1>
+
+<div id="timer">Time left: 30</div>
+<div id="score">Score: 0</div>
+
+<div id="shape-display">⬤</div>
+
+<div id="buttons">
+    <!-- Shape buttons will be generated here -->
+</div>
+
+<div id="result"></div>
+
+<script>
+    let score = 0;
+    let timeLeft = 30;
+    let currentShape = '';
+    let timerInterval;
+
+    // Map shape names to Unicode symbols or emojis
+    const shapeSymbols = {
+        'Circle': '⬤',
+        'Square': '■',
+        'Triangle': '▲'
+    };
+
+    function startGame() {
+        score = 0;
+        timeLeft = 30;
+        document.getElementById('score').innerText = 'Score: ' + score;
+        document.getElementById('timer').innerText = 'Time left: ' + timeLeft;
+        document.getElementById('result').innerText = '';
+        startTimer();
+        nextChallenge();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = 'Time left: ' + timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function nextChallenge() {
+        fetch('/game/get_shape_challenge/')
+            .then(response => response.json())
+            .then(data => {
+                currentShape = data.shape;
+                document.getElementById('shape-display').innerText = shapeSymbols[currentShape] || currentShape;
+
+                const buttonsDiv = document.getElementById('buttons');
+                buttonsDiv.innerHTML = '';
+                data.choices.forEach(shape => {
+                    const btn = document.createElement('button');
+                    btn.className = 'shape-btn';
+                    btn.innerText = shapeSymbols[shape] || shape;
+                    btn.title = shape;  // show shape name on hover
+                    btn.onclick = () => checkAnswer(shape);
+                    buttonsDiv.appendChild(btn);
+                });
+            });
+    }
+
+    function checkAnswer(selectedShape) {
+        if (selectedShape === currentShape) {
+            score++;
+            document.getElementById('score').innerText = 'Score: ' + score;
+            document.getElementById('result').innerText = '';
+            nextChallenge();
+        } else {
+            document.getElementById('result').innerText = 'Wrong! Try again.';
+        }
+    }
+
+    function endGame() {
+        document.getElementById('shape-display').innerText = 'Game Over!';
+        document.getElementById('buttons').innerHTML = '';
+        document.getElementById('result').innerText = 'Your final score: ' + score;
+        const restartBtn = document.createElement('button');
+        restartBtn.innerText = 'Play Again';
+        restartBtn.onclick = () => {
+            document.getElementById('result').innerText = '';
+            startGame();
+        };
+        document.getElementById('buttons').appendChild(restartBtn);
+    }
+
+    window.onload = startGame;
+</script>
+{% endblock content %}

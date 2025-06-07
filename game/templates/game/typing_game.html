@@ -1,0 +1,157 @@
+{% extends 'game/base.html' %}
+{% block title %}Typing Speed Game{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(to right, #dfe9f3, #ffffff);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  h1 {
+    font-size: 3rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+
+  #word {
+    font-size: 3rem;
+    margin: 30px 0;
+    font-weight: bold;
+    color: #16a085;
+    transition: transform 0.3s ease;
+    animation: pulse 1s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+
+  input[type="text"] {
+    font-size: 28px;
+    padding: 10px;
+    width: 320px;
+    border-radius: 10px;
+    border: 2px solid #3498db;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+
+  input[type="text"]:focus {
+    box-shadow: 0 0 8px #3498db;
+  }
+
+  #result {
+    margin-top: 25px;
+    font-size: 22px;
+    color: #2d3436;
+    min-height: 40px;
+  }
+
+  button {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    background: linear-gradient(to right, #1abc9c, #16a085);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background: linear-gradient(to right, #16a085, #1abc9c);
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<h1>Typing Speed Game</h1>
+<p>Type each word as fast and accurately as you can:</p>
+
+<div id="word">Click "Start Game" to begin!</div>
+
+<input type="text" id="input-word" autocomplete="off" placeholder="Start typing..." disabled />
+
+<div id="result"></div>
+
+<button id="start-btn">Start Game</button>
+
+<script>
+  const words = [
+    'python', 'coding', 'school', 'relax', 'brain', 'memory',
+    'typing', 'speed', 'challenge', 'awesome', 'developer', 'openai',
+    'future', 'keyboard', 'focus', 'skill', 'train', 'fast', 'smart'
+  ];
+
+  let currentWord = '';
+  let totalChars = 0;
+  let totalTime = 0;
+  let startTime;
+  let wordCount = 0;
+
+  const wordElem = document.getElementById('word');
+  const inputElem = document.getElementById('input-word');
+  const resultElem = document.getElementById('result');
+  const startBtn = document.getElementById('start-btn');
+
+  function pickWord() {
+    const randomIndex = Math.floor(Math.random() * words.length);
+    currentWord = words[randomIndex];
+    wordElem.textContent = currentWord;
+  }
+
+  function startGame() {
+    wordCount = 0;
+    totalChars = 0;
+    totalTime = 0;
+    resultElem.textContent = '';
+    inputElem.value = '';
+    inputElem.disabled = false;
+    inputElem.focus();
+    startTime = new Date();
+    nextWord();
+  }
+
+  function nextWord() {
+    pickWord();
+    inputElem.value = '';
+    startTime = new Date();
+  }
+
+  inputElem.addEventListener('input', () => {
+    if (inputElem.value === currentWord) {
+      const endTime = new Date();
+      const timeTaken = (endTime - startTime) / 1000;
+
+      totalTime += timeTaken;
+      totalChars += currentWord.length;
+      wordCount++;
+
+      const speed = (totalChars / totalTime) * 60;
+
+      resultElem.innerHTML = `
+        ✅ Word ${wordCount} completed <br>
+        ⏱ Time: ${timeTaken.toFixed(2)}s <br>
+        ⚡ Avg Speed: ${speed.toFixed(2)} chars/min
+      `;
+
+      nextWord(); // load next word automatically
+    }
+  });
+
+  startBtn.addEventListener('click', startGame);
+</script>
+{% endblock content %}

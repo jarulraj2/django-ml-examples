@@ -1,0 +1,197 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Memory Game{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f7f9fb;
+    padding-top: 40px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  }
+
+  #game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  .card {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 48px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .card.flipped {
+    background-color: #2ecc71;
+  }
+
+  #result {
+    margin-top: 20px;
+    font-size: 22px;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+
+  #restart-btn {
+    margin-top: 25px;
+    padding: 10px 25px;
+    font-size: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    display: none;
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  #restart-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 480px) {
+    #game-board {
+      grid-template-columns: repeat(4, 70px);
+      grid-gap: 10px;
+    }
+
+    .card {
+      width: 70px;
+      height: 70px;
+      font-size: 32px;
+    }
+
+    #restart-btn {
+      font-size: 18px;
+      padding: 8px 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh;">
+  <h1>Memory Game</h1>
+  <div id="game-board"></div>
+  <div id="result"></div>
+  <button id="restart-btn">Restart Game</button>
+</div>
+
+<script>
+  const board = document.getElementById('game-board');
+  const restartBtn = document.getElementById('restart-btn');
+  const result = document.getElementById('result');
+
+  const cards = ['🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍓', '🍓',
+                 '🍒', '🍒', '🍍', '🍍', '🥝', '🥝', '🍉', '🍉'];
+
+  let firstCard = null;
+  let secondCard = null;
+  let lockBoard = false;
+  let matchedPairs = 0;
+
+  function shuffle(array) {
+    for(let i = array.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function createBoard() {
+    board.innerHTML = '';
+    matchedPairs = 0;
+    result.innerText = '';
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    restartBtn.style.display = 'none';
+
+    const shuffledCards = shuffle(cards.slice());
+
+    shuffledCards.forEach((emoji, idx) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.dataset.emoji = emoji;
+      card.dataset.index = idx;
+      card.innerText = '';
+      card.addEventListener('click', flipCard);
+      board.appendChild(card);
+    });
+  }
+
+  function flipCard() {
+    if (lockBoard || this === firstCard) return;
+
+    this.classList.add('flipped');
+    this.innerText = this.dataset.emoji;
+
+    if (!firstCard) {
+      firstCard = this;
+      return;
+    }
+
+    secondCard = this;
+    checkForMatch();
+  }
+
+  function checkForMatch() {
+    if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
+      matchedPairs++;
+      resetTurn();
+      if (matchedPairs === cards.length / 2) {
+        result.innerText = '🎉 Congratulations! You matched all pairs!';
+        restartBtn.style.display = 'inline-block';
+      }
+    } else {
+      lockBoard = true;
+      setTimeout(() => {
+        firstCard.classList.remove('flipped');
+        secondCard.classList.remove('flipped');
+        firstCard.innerText = '';
+        secondCard.innerText = '';
+        resetTurn();
+      }, 1000);
+    }
+  }
+
+  function resetTurn() {
+    [firstCard, secondCard] = [null, null];
+    lockBoard = false;
+  }
+
+  restartBtn.addEventListener('click', createBoard);
+
+  // Start game on load
+  createBoard();
+</script>
+{% endblock content %}

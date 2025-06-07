@@ -1,0 +1,157 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Quick Color Match{% endblock %}
+{% load static %}
+{% block extra_css %}
+<style>
+  /* Import Google Font Montserrat */
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+  #color-match-game {
+    max-width: 480px;
+    min-width: 320px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    font-family: 'Montserrat', sans-serif;
+    user-select: none;
+  }
+
+  #color-match-game h1 {
+    margin-bottom: 30px;
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #2c3e50;
+    letter-spacing: 1.2px;
+  }
+
+  #start-btn {
+    width: 100%;
+    padding: 18px 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8e44ad, #3498db);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.5);
+    transition: all 0.3s ease;
+    margin-bottom: 40px;
+  }
+  #start-btn:hover {
+    background: linear-gradient(135deg, #732d91, #2980b9);
+    box-shadow: 0 8px 22px rgba(41, 128, 185, 0.7);
+    transform: scale(1.05);
+  }
+  #start-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 12px rgba(41, 128, 185, 0.4);
+  }
+
+  #timer, #score {
+    font-size: 1.4rem;
+    color: #34495e;
+    font-weight: 700;
+    margin: 15px 0;
+    user-select: none;
+  }
+
+  #color-word {
+    font-size: 5rem;
+    font-weight: 900;
+    margin: 40px 0 35px;
+    transition: color 0.6s ease;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  #buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  button.color-btn {
+    flex: 1 1 130px;
+    max-width: 160px;
+    height: 60px;
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  button.color-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  button.color-btn:active {
+    transform: translateY(0) scale(0.95);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  }
+
+  #result {
+    margin-top: 35px;
+    min-height: 28px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #e74c3c;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 400px) {
+    #color-match-game {
+      padding: 20px 20px;
+    }
+    #color-word {
+      font-size: 3.8rem;
+      letter-spacing: 2px;
+    }
+    button.color-btn {
+      max-width: 130px;
+      font-size: 1.1rem;
+      height: 50px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        start_game_session();
+    });
+    if (window.AIBehaviorControl) {
+    AIBehaviorControl.stopGame();
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div id="color-match-game">
+  <h1>Quick Color Match332</h1>
+  <button id="start-btn">Start Game</button>
+  <div id="timer" style="display:none;">Time left: 30</div>
+  <div id="score" style="display:none;">Score: 0</div>
+  <div id="color-word" style="margin-bottom: 15px;"></div>
+  <div id="buttons"></div>
+  <div id="result"></div>
+</div>
+
+<script src="{% static 'js/color_match.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Math</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+        #question {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            font-size: 24px;
+            padding: 5px;
+            width: 120px;
+            text-align: center;
+        }
+        button {
+            font-size: 22px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #16a085;
+            color: white;
+            border: none;
+        }
+        #score {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Quick Math</h1>
+<div id="question"></div>
+<input type="number" id="answer" autocomplete="off" />
+<button id="submit-btn">Submit</button>
+<div id="score">Score: 0</div>
+<div id="result"></div>
+
+<script>
+    let score = 0;
+    let currentAnswer = 0;
+
+    function generateQuestion() {
+        const a = Math.floor(Math.random() * 20) + 1;
+        const b = Math.floor(Math.random() * 20) + 1;
+        const ops = ['+', '-', '*'];
+        const op = ops[Math.floor(Math.random() * ops.length)];
+
+        switch(op){
+            case '+': currentAnswer = a + b; break;
+            case '-': currentAnswer = a - b; break;
+            case '*': currentAnswer = a * b; break;
+        }
+        document.getElementById('question').innerText = `What is ${a} ${op} ${b}?`;
+        document.getElementById('answer').value = '';
+        document.getElementById('answer').focus();
+        document.getElementById('result').innerText = '';
+    }
+
+    document.getElementById('submit-btn').addEventListener('click', () => {
+        const userAnswer = parseInt(document.getElementById('answer').value);
+        if(userAnswer === currentAnswer){
+            score++;
+            document.getElementById('score').innerText = 'Score: ' + score;
+            document.getElementById('result').innerText = 'Correct!';
+        } else {
+            document.getElementById('result').innerText = 'Incorrect, try again!';
+        }
+        generateQuestion();
+    });
+
+    // Start the game
+    generateQuestion();
+</script>
+
+</body>
+</html>

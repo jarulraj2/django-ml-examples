@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ml_examples',
-    'bmicalculator'
+    'bmicalculator',
+    'imageprocessing',
+    'game',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,33 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+
+# Media (uploads) settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/uploads')
+COMPRESSED_ROOT = os.path.join(BASE_DIR, 'compressed')
+
+gs_executable = r"C:\Program Files\gs\gs10.05.1.##\bin\gswin64c.exe"
+
+
+gs_command = [
+    gs_executable,
+    "-sDEVICE=pdfwrite",
+    ...
+]
+
+OPENAI_API_KEY="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"
+
+
+import os
+
+# Add or update this STATICFILES_DIRS setting:
+
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# For collectstatic in production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

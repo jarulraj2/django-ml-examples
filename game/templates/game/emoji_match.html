@@ -1,0 +1,131 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Emoji Match Game{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background: #f0f8ff;
+    }
+    #emoji-display {
+        font-size: 100px;
+        margin-bottom: 30px;
+    }
+    button.emoji-btn {
+        font-size: 40px;
+        margin: 10px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 12px;
+        background-color: #4CAF50;
+        color: white;
+        transition: background-color 0.3s;
+    }
+    button.emoji-btn:hover {
+        background-color: #45a049;
+    }
+    #score, #timer {
+        font-size: 24px;
+        margin: 15px;
+    }
+    #result {
+        font-size: 20px;
+        color: red;
+        margin-top: 20px;
+        min-height: 24px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<h1>Emoji Match Game</h1>
+
+<div id="timer">Time left: 30</div>
+<div id="score">Score: 0</div>
+
+<div id="emoji-display">😀</div>
+
+<div id="buttons">
+    <!-- Emoji buttons will be generated here -->
+</div>
+
+<div id="result"></div>
+
+<script>
+    let score = 0;
+    let timeLeft = 30;
+    let currentEmoji = '';
+    let timerInterval;
+
+    function startGame() {
+        score = 0;
+        timeLeft = 30;
+        document.getElementById('score').innerText = 'Score: ' + score;
+        document.getElementById('timer').innerText = 'Time left: ' + timeLeft;
+        document.getElementById('result').innerText = '';
+        startTimer();
+        nextChallenge();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = 'Time left: ' + timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function nextChallenge() {
+        fetch('/game/get_emoji_challenge/')
+            .then(response => response.json())
+            .then(data => {
+                currentEmoji = data.emoji;
+                document.getElementById('emoji-display').innerText = currentEmoji;
+
+                const buttonsDiv = document.getElementById('buttons');
+                buttonsDiv.innerHTML = '';
+                data.choices.forEach(emoji => {
+                    const btn = document.createElement('button');
+                    btn.className = 'emoji-btn';
+                    btn.innerText = emoji;
+                    btn.onclick = () => checkAnswer(emoji);
+                    buttonsDiv.appendChild(btn);
+                });
+            });
+    }
+
+    function checkAnswer(selectedEmoji) {
+        if (selectedEmoji === currentEmoji) {
+            score++;
+            document.getElementById('score').innerText = 'Score: ' + score;
+            document.getElementById('result').innerText = '';
+            nextChallenge();
+        } else {
+            document.getElementById('result').innerText = 'Wrong! Try again.';
+        }
+    }
+
+    function endGame() {
+        document.getElementById('emoji-display').innerText = 'Game Over!';
+        document.getElementById('buttons').innerHTML = '';
+        document.getElementById('result').innerText = 'Your final score: ' + score;
+        const restartBtn = document.createElement('button');
+        restartBtn.innerText = 'Play Again';
+        restartBtn.onclick = () => {
+            document.getElementById('result').innerText = '';
+            startGame();
+        };
+        document.getElementById('buttons').appendChild(restartBtn);
+    }
+
+    window.onload = startGame;
+</script>
+{% endblock content %}

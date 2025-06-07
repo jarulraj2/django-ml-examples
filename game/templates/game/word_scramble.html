@@ -1,0 +1,86 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Word Scramble{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 40px;
+    }
+    #scrambled-word {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    input[type="text"] {
+        font-size: 24px;
+        padding: 8px;
+        width: 300px;
+    }
+    button {
+        font-size: 22px;
+        padding: 10px 20px;
+        margin-left: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #2980b9;
+        color: white;
+        border: none;
+    }
+    #result {
+        margin-top: 25px;
+        font-size: 22px;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<h1>Word Scramble</h1>
+<div id="scrambled-word"></div>
+<input type="text" id="user-input" placeholder="Type the correct word" autocomplete="off" />
+<button id="submit-btn">Submit</button>
+<div id="result"></div>
+
+<script>
+    const words = ['apple', 'banana', 'orange', 'grape', 'lemon', 'melon', 'cherry', 'peach'];
+    let currentWord = '';
+    let scrambledWord = '';
+
+    function shuffle(word) {
+        const arr = word.split('');
+        for(let i = arr.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr.join('');
+    }
+
+    function nextWord() {
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        scrambledWord = shuffle(currentWord);
+        while(scrambledWord === currentWord) {
+            scrambledWord = shuffle(currentWord);
+        }
+        document.getElementById('scrambled-word').innerText = scrambledWord;
+        document.getElementById('user-input').value = '';
+        document.getElementById('result').innerText = '';
+        document.getElementById('user-input').focus();
+    }
+
+    document.getElementById('submit-btn').addEventListener('click', () => {
+        const userAnswer = document.getElementById('user-input').value.trim().toLowerCase();
+        if(userAnswer === currentWord){
+            document.getElementById('result').innerText = 'Correct! Well done.';
+        } else {
+            document.getElementById('result').innerText = 'Oops! Try again.';
+        }
+        setTimeout(nextWord, 1500);
+    });
+
+    // Start the game
+    nextWord();
+</script>
+{% endblock content %}

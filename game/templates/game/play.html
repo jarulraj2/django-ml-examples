@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mind Refresh - Quick Color Match</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #color-word {
+            font-size: 60px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        button.color-btn {
+            width: 100px;
+            height: 50px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+        #score, #timer {
+            font-size: 24px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Quick Color Match</h1>
+
+<div id="timer">Time left: 30</div>
+<div id="score">Score: 0</div>
+
+<div id="color-word">Loading...</div>
+
+<div id="buttons">
+    <!-- Buttons will be inserted here dynamically -->
+</div>
+
+<div id="result"></div>
+
+<script>
+    const COLORS = ['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'];
+    let score = 0;
+    let timeLeft = 30;
+    let currentFontColor = '';
+    let timerInterval;
+
+    function startGame() {
+        score = 0;
+        timeLeft = 30;
+        document.getElementById('score').innerText = 'Score: 0';
+        document.getElementById('result').innerText = '';
+        startTimer();
+        nextChallenge();
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = 'Time left: ' + timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function nextChallenge() {
+        fetch('/game/get_challenge/')
+            .then(response => response.json())
+            .then(data => {
+                const wordElem = document.getElementById('color-word');
+                wordElem.innerText = data.word;
+                wordElem.style.color = data.font_color.toLowerCase();
+                currentFontColor = data.font_color;
+
+                // Create buttons
+                const buttonsDiv = document.getElementById('buttons');
+                buttonsDiv.innerHTML = '';
+                data.colors.forEach(color => {
+                    const btn = document.createElement('button');
+                    btn.className = 'color-btn';
+                    btn.style.backgroundColor = color.toLowerCase();
+                    btn.innerText = color;
+                    btn.onclick = () => checkAnswer(color);
+                    buttonsDiv.appendChild(btn);
+                });
+            });
+    }
+
+    function checkAnswer(selectedColor) {
+        if (selectedColor === currentFontColor) {
+            score++;
+            document.getElementById('score').innerText = 'Score: ' + score;
+            nextChallenge();
+        } else {
+            document.getElementById('result').innerText = 'Oops! Wrong color. Try again.';
+        }
+    }
+
+    function endGame() {
+        document.getElementById('color-word').innerText = 'Game Over!';
+        document.getElementById('buttons').innerHTML = '';
+        document.getElementById('result').innerText = 'Your final score: ' + score;
+        const restartBtn = document.createElement('button');
+        restartBtn.innerText = 'Play Again';
+        restartBtn.onclick = () => {
+            document.getElementById('result').innerText = '';
+            startGame();
+        };
+        document.getElementById('buttons').appendChild(restartBtn);
+    }
+
+    // Start game on page load
+    window.onload = startGame;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Pattern Memory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+        #pattern {
+            margin-bottom: 30px;
+            height: 100px;
+        }
+        .color-box {
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+            margin: 0 10px;
+            border-radius: 10px;
+        }
+        #input-area {
+            margin-top: 20px;
+        }
+        button.color-btn {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Color Pattern Memory</h1>
+
+<div id="pattern"></div>
+
+<div id="input-area">
+    <button class="color-btn" style="background-color: red;" data-color="red"></button>
+    <button class="color-btn" style="background-color: blue;" data-color="blue"></button>
+    <button class="color-btn" style="background-color: green;" data-color="green"></button>
+    <button class="color-btn" style="background-color: yellow; color: black;" data-color="yellow"></button>
+</div>
+
+<div id="result"></div>
+
+<script>
+    const colors = ['red', 'blue', 'green', 'yellow'];
+    let pattern = [];
+    let userPattern = [];
+    let level = 0;
+
+    function generateNextColor() {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        pattern.push(randomColor);
+    }
+
+    function showPattern() {
+        const patternDiv = document.getElementById('pattern');
+        patternDiv.innerHTML = '';
+        let i = 0;
+        const interval = setInterval(() => {
+            if(i > 0) {
+                patternDiv.children[i-1].style.opacity = 0.5;
+            }
+            if(i === pattern.length) {
+                clearInterval(interval);
+                patternDiv.innerHTML = '';
+                enableButtons(true);
+                return;
+            }
+            const box = document.createElement('div');
+            box.classList.add('color-box');
+            box.style.backgroundColor = pattern[i];
+            box.style.opacity = 1;
+            patternDiv.appendChild(box);
+            i++;
+        }, 800);
+    }
+
+    function enableButtons(enable) {
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.disabled = !enable;
+        });
+    }
+
+    function resetGame() {
+        pattern = [];
+        userPattern = [];
+        level = 0;
+        document.getElementById('result').innerText = '';
+        nextLevel();
+    }
+
+    function nextLevel() {
+        level++;
+        userPattern = [];
+        generateNextColor();
+        enableButtons(false);
+        setTimeout(() => {
+            showPattern();
+        }, 500);
+    }
+
+    document.querySelectorAll('.color-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const clickedColor = button.dataset.color;
+            userPattern.push(clickedColor);
+
+            const currentIndex = userPattern.length - 1;
+            if(userPattern[currentIndex] !== pattern[currentIndex]){
+                document.getElementById('result').innerText = `Wrong pattern! You reached level ${level}.`;
+                enableButtons(false);
+                setTimeout(resetGame, 2000);
+            } else if(userPattern.length === pattern.length){
+                document.getElementById('result').innerText = `Good job! Level ${level} passed.`;
+                enableButtons(false);
+                setTimeout(nextLevel, 1500);
+            }
+        });
+    });
+
+    // Start the game
+    resetGame();
+</script>
+
+</body>
+</html>

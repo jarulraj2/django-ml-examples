@@ -1,7 +1,56 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
+
+# SQLite database file
 *.sqlite3
+
+# Environment variables file
 .env
+
+# Virtual environment
 venv/
+env/
+ENV/
+
+# Logs
 *.log
+
+# Django static files (collected static)
+staticfiles/
+static/
+
+# Media files (user uploads)
+media/
+
+# PyCharm project files
+.idea/
+
+# VSCode settings
+.vscode/
+
+# macOS files
+.DS_Store
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# mypy type checker
+.mypy_cache/
+
+# pytest cache
+.pytest_cache/
+
+# celery beat schedule file
+celerybeat-schedule
+
+# local settings
+local_settings.py
+
+# pipenv
+Pipfile.lock
+
+# pyenv
+.python-version

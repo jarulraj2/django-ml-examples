@@ -1,0 +1,96 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Click Speed Test{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  h1 {
+    margin-bottom: 10px;
+    font-weight: 900;
+    font-size: 2.8rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  }
+
+  #count {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #00796b;
+    margin: 20px 0;
+  }
+
+  #click-btn {
+    font-size: 28px;
+    padding: 20px 50px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 121, 107, 0.4);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+
+  #click-btn:hover {
+    background-color: #004d40;
+    transform: scale(1.05);
+  }
+
+  #click-btn:active {
+    transform: scale(0.95);
+  }
+
+  #result {
+    margin-top: 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #004d40;
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    #click-btn {
+      font-size: 22px;
+      padding: 16px 32px;
+    }
+
+    #count {
+      font-size: 3rem;
+    }
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; min-height: 80vh;">
+  <h1>Click Speed Test</h1>
+  <p>Click the button as many times as you can in 5 seconds!</p>
+  <h2 id="count">0</h2>
+  <button id="click-btn" disabled>Click Me!</button>
+  <div id="result">Get ready...</div>
+</div>
+
+<script>
+  let count = 0;
+  const button = document.getElementById('click-btn');
+  const countDisplay = document.getElementById('count');
+  const result = document.getElementById('result');
+
+  setTimeout(() => {
+    button.disabled = false;
+    result.innerText = 'Go!';
+    let timer = setTimeout(() => {
+      button.disabled = true;
+      result.innerText = 'Time’s up! Your score: ' + count;
+    }, 5000);
+  }, 2000);
+
+  button.addEventListener('click', () => {
+    count++;
+    countDisplay.innerText = count;
+  });
+</script>
+{% endblock content %}

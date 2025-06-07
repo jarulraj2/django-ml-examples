@@ -1,0 +1,249 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Breathe & Relax{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+ h1 {
+  margin-bottom: 25px;
+  font-weight: 900;
+  font-size: 3rem;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+}
+
+#instructions {
+  font-size: 1.7rem;
+  margin-bottom: 30px;
+  min-height: 48px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #004d40;
+  transition: color 0.5s ease;
+}
+
+#circle {
+  width: 200px;
+  height: 200px;
+  background: #4db6ac;
+  border-radius: 50%;
+  opacity: 0.85;
+  margin-bottom: 40px;
+  box-shadow: 0 0 30px 6px rgba(77, 182, 172, 0.7);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.6s ease, background-color 1s ease;
+}
+
+#circle.inhale {
+  background: #3db39e;
+  box-shadow: 0 0 40px 10px #3db39e;
+  animation: pulse 4s infinite ease-in-out;
+}
+
+#circle.hold {
+  background: #80cbc4;
+  box-shadow: 0 0 35px 9px #80cbc4;
+  animation: pulseHold 7s infinite ease-in-out;
+}
+
+#circle.exhale {
+  background: #009688;
+  box-shadow: 0 0 30px 7px #009688;
+  animation: pulseExhale 8s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 40px 10px #3db39e; }
+  50% { box-shadow: 0 0 55px 20px #3db39e; }
+}
+@keyframes pulseHold {
+  0%, 100% { box-shadow: 0 0 35px 9px #80cbc4; }
+  50% { box-shadow: 0 0 45px 15px #80cbc4; }
+}
+@keyframes pulseExhale {
+  0%, 100% { box-shadow: 0 0 30px 7px #009688; }
+  50% { box-shadow: 0 0 42px 16px #009688; }
+}
+
+#timer {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 40px;
+  min-width: 90px;
+  color: #004d40;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#timer.visible {
+  opacity: 1;
+}
+
+#startBtn, #stopBtn {
+  padding: 16px 48px;
+  font-size: 22px;
+  background: #00796b;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  margin: 0 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 121, 107, 0.6);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+#startBtn:hover, #stopBtn:hover {
+  background: #004d40;
+  transform: scale(1.05);
+}
+
+#startBtn:active, #stopBtn:active {
+  transform: scale(0.95);
+}
+
+#stopBtn {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  #circle {
+    width: 150px;
+    height: 150px;
+  }
+
+  #timer {
+    font-size: 3rem;
+  }
+
+  #startBtn, #stopBtn {
+    padding: 14px 36px;
+    font-size: 18px;
+    margin: 0 8px;
+  }
+}
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  #instructions {
+    font-size: 1.3rem;
+  }
+}
+
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; min-height: 80vh;">
+  <h1>Breathe & Relax</h1>
+  <div id="instructions">Click Start and follow the circle’s breathing rhythm</div>
+  <div id="circle"></div>
+  <div id="timer">0</div>
+  <div>
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+  </div>
+</div>
+
+<script>
+  const circle = document.getElementById('circle');
+  const timerDisplay = document.getElementById('timer');
+  const instructions = document.getElementById('instructions');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+
+  const inhaleTime = 4000;
+  const holdTime = 7000;
+  const exhaleTime = 8000;
+
+  let animationFrameId;
+  let cycleStartTime;
+  let phase = 'idle';
+
+  function lerp(start, end, t) {
+    return start + (end - start) * t;
+  }
+
+  function update(currentTime) {
+    if (phase === 'idle') return;
+
+    if (!cycleStartTime) cycleStartTime = currentTime;
+
+    const elapsed = currentTime - cycleStartTime;
+
+    if (phase === 'inhale') {
+      const progress = Math.min(elapsed / inhaleTime, 1);
+      const size = lerp(200, 300, progress);
+      circle.style.width = size + 'px';
+      circle.style.height = size + 'px';
+      circle.className = 'inhale';
+      instructions.innerText = 'Inhale...';
+      timerDisplay.innerText = Math.ceil((inhaleTime - elapsed) / 1000);
+      timerDisplay.classList.add('visible');
+
+      if (elapsed >= inhaleTime) {
+        phase = 'hold';
+        cycleStartTime = currentTime;
+      }
+    }
+    else if (phase === 'hold') {
+      circle.style.width = '300px';
+      circle.style.height = '300px';
+      circle.className = 'hold';
+      instructions.innerText = 'Hold...';
+      timerDisplay.innerText = Math.ceil((holdTime - elapsed) / 1000);
+      timerDisplay.classList.add('visible');
+
+      if (elapsed >= holdTime) {
+        phase = 'exhale';
+        cycleStartTime = currentTime;
+      }
+    }
+    else if (phase === 'exhale') {
+      const progress = Math.min(elapsed / exhaleTime, 1);
+      const size = lerp(300, 200, progress);
+      circle.style.width = size + 'px';
+      circle.style.height = size + 'px';
+      circle.className = 'exhale';
+      instructions.innerText = 'Exhale...';
+      timerDisplay.innerText = Math.ceil((exhaleTime - elapsed) / 1000);
+      timerDisplay.classList.add('visible');
+
+      if (elapsed >= exhaleTime) {
+        phase = 'inhale';
+        cycleStartTime = currentTime;
+      }
+    }
+
+    animationFrameId = requestAnimationFrame(update);
+  }
+
+  function startBreathing() {
+    if (phase !== 'idle') return;
+    phase = 'inhale';
+    cycleStartTime = null;
+    startBtn.disabled = true;
+    stopBtn.style.display = 'inline-block';
+    update(performance.now());
+  }
+
+  function stopBreathing() {
+    phase = 'idle';
+    cancelAnimationFrame(animationFrameId);
+    circle.style.width = '200px';
+    circle.style.height = '200px';
+    circle.className = '';
+    timerDisplay.innerText = '0';
+    timerDisplay.classList.remove('visible');
+    instructions.innerText = 'Click Start and follow the circle’s breathing rhythm';
+    startBtn.disabled = false;
+    stopBtn.style.display = 'none';
+  }
+
+  startBtn.addEventListener('click', startBreathing);
+  stopBtn.addEventListener('click', stopBreathing);
+</script>
+{% endblock content %}
