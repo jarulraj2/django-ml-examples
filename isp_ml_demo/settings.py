@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages','django.contrib.staticfiles',
     'ml_examples',
     'bmicalculator',
-    'imageprocessing',
     'game',
     'generator'
 ]

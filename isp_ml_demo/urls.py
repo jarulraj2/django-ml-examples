@@ -5,9 +5,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ml_examples.urls')),
-    path('bmi/', include('bmicalculator.urls')),    
-    path('imageprocessing/', include('imageprocessing.urls', namespace='imageprocessing')),
-       # Include the game app URLs under /game/ prefix
+    path('bmi/', include('bmicalculator.urls')), 
     path('game/', include(('game.urls', 'game'), namespace='game')),
     path('resume/', include('generator.urls')),
 ]
