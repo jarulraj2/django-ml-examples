@@ -140,7 +140,7 @@ gs_command = [
     ...
 ]
 
-OPENAI_API_KEY="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"
+#OPENAI_API_KEY="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"
 
 
 import os
