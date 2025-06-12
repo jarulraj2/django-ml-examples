@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Viewer</title>
+</head>
+<body>
+    <form method="get" action="">
+        <label for="template">Choose Resume Template:</label>
+        <select name="template" id="template" onchange="this.form.submit()">
+            <option value="template1.html" {% if template_name == "template1.html" %}selected{% endif %}>Template 1</option>
+            <option value="template2.html" {% if template_name == "template2.html" %}selected{% endif %}>Template 2</option>
+            <option value="template3.html" {% if template_name == "template3.html" %}selected{% endif %}>Template 3</option>
+        </select>
+    </form>
+
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

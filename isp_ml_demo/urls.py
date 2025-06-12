@@ -9,6 +9,7 @@ urlpatterns = [
     path('imageprocessing/', include('imageprocessing.urls', namespace='imageprocessing')),
        # Include the game app URLs under /game/ prefix
     path('game/', include(('game.urls', 'game'), namespace='game')),
+    path('resume/', include('generator.urls')),
 ]
 # Serve media files in development
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

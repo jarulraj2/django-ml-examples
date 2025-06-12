@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ data.name }} - Resume</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        .resume {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .left-panel {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .right-panel {
+            padding: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="resume">
+        <div class="left-panel">
+            <h1>{{ data.name }}</h1>
+            <p><strong>Email:</strong> {{ data.email }}</p>
+            <p><strong>Phone:</strong> {{ data.phone }}</p>
+
+            <h2>Skills</h2>
+            <ul>
+                {% for skill in data.skills %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Education</h2>
+            <ul>
+                {% for edu in data.education %}
+                    <li>{{ edu }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Certificates</h2>
+                {% for cert in data.certificates %}
+                    <p>{{ cert }}</p>
+                {% endfor %}
+
+
+        </div>
+
+        <div class="right-panel">
+            <h2>Job Role</h2>
+            <p>{{ data.job_role }}</p>
+
+            <h2>Experience</h2>
+            {% for exp in data.experience %}
+                <p><strong>{{ exp.position }}</strong> at {{ exp.company }} ({{ exp.from }} - {{ exp.to }})</p>
+            {% endfor %}
+
+            <h2>Projects</h2>
+            {% for proj in data.projects %}
+                <p>{{ proj }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

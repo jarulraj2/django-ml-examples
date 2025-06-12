@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Builder</title>
+    <style>
+        body { display: flex; font-family: sans-serif; margin: 0; }
+        .left { width: 30%; padding: 20px; border-right: 1px solid #ccc; height: 100vh; overflow-y: auto; }
+        .right { width: 70%; padding: 20px; height: 100vh; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <h2>Edit Resume Data</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+    <div class="right">
+        {% if data %}
+            {% include "generator/"|add:template|add:".html" %}
+        {% else %}
+            <p>Fill the form to preview your resume.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

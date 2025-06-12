@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Builder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            display: grid;
+            grid-template-columns: 30% 70%; /* reduced left */
+            height: 100vh;
+        }
+        .left {
+            background-color: #ffffff;
+            padding: 20px 25px;
+            border-right: 2px solid #ddd;
+            overflow-y: auto;
+        }
+        .left h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .left form {
+            display: flex;
+            flex-direction: column;
+        }
+        .left form p {
+            margin-bottom: 15px;
+        }
+        .left button {
+            padding: 10px 20px;
+            background-color: #0055ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .left button:hover {
+            background-color: #003fcc;
+        }
+        .right {
+            padding: 40px;
+            background: #fafafa;
+            overflow-y: auto;
+        }
+        .placeholder {
+            color: #aaa;
+            text-align: center;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <h2>Build Resume</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Preview Resume</button>
+        </form>
+    </div>
+    <div class="right">
+        {% if data %}
+            {% include "generator/"|add:template|add:".html" %}
+        {% else %}
+            <div class="placeholder">
+                <h3>👈 Fill the form to preview your resume</h3>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

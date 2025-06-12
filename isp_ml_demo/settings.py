@@ -35,12 +35,12 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.messages','django.contrib.staticfiles',
     'ml_examples',
     'bmicalculator',
     'imageprocessing',
     'game',
+    'generator'
 ]
 
 MIDDLEWARE = [
@@ -141,7 +141,7 @@ gs_command = [
     ...
 ]
 
-OPENAI_API_KEY="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"
+OPENAI_API_KEY="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"
 
 
 import os
