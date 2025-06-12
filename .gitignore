@@ -45,7 +45,7 @@ htmlcov/
 
 # celery beat schedule file
 celerybeat-schedule
-settings.py
+
 # local settings
 local_settings.py
 
