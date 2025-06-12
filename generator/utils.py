@@ -1,10 +1,11 @@
 import spacy
 import re
 
-nlp = spacy.load("en_core_web_sm")
+
 
 # --- Name ---
 def extract_name(text):
+    nlp = spacy.load("en_core_web_sm")
     patterns = [
         r'(?i)\bmy name is\s+([A-Z][a-z]+(?:\s+[A-Z](?:[a-z]+)?))',
         r'(?i)\bi am\s+([A-Z][a-z]+(?:\s+[A-Z](?:[a-z]+)?))',
